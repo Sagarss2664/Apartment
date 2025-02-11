@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #1abc9c;
+    --accent-color: #3498db;
+    --text-light: #ecf0f1;
+    --text-dark: #2c3e50;
+    --bg-color: #ecf0f1;
+    --transition: all 0.3s ease-in-out;
+    --primary-color1: #3498db;
+    --secondary-color1: #2ecc71;
+    --shadow-color1: rgba(0, 0, 0, 0.2);
+    --bg-color1: #1f242d;
+    --second-bg-color1: #323946;
+    --text-color1: #ffffff;
+    --main-color1: #0ef;
+}
+
+body {
+    background: linear-gradient(
+        to right,
+        var(--secondary-color),
+        var(--second-bg-color1)
+    );
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px var(--shadow-color1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+}
+
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--shadow-color1);
+}
+
+.container h3 {
+text-align: center;
+margin-bottom: 10px;
+color: var(--main-color1);
+font-size: 1.8rem;
+}
+
+input[type="text"], input[type="datetime-local"], button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid var(--shadow-color1);
+}
+
+button {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+button:hover {
+    background-color: var(--primary-color1);
+}
+
+.details {
+    margin-top: 20px;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.details h3 {
+    font-size: 1.5rem;
+}
+
+.details p {
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    input[type="text"], input[type="datetime-local"], button {
+        padding: 8px;
+    }
+}

@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #1abc9c;
+    --text-light: #ecf0f1;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --main-color: #0ef;
+}
+body {
+    background: linear-gradient(to right, var(--secondary-color), #323946);
+    color: var(--text-light);
+    padding: 20px;
+}
+.form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background: var(--primary-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+h3 {
+    text-align: center;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+button:hover {
+    opacity: 0.9;
+}
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+th {
+    background: #34495e;
+}
+.checkout-btn {
+    background: #e74c3c;
+    padding: 8px 15px;
+    border-radius: 4px;
+    width: auto;
+}
+.date-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.date-filter input {
+    flex: 1;
+}
+.date-filter button {
+    width: auto;
+    white-space: nowrap;
+}

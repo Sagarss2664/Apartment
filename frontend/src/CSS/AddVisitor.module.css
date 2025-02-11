@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+  font-family: "Poppins", sans-serif;
+}
+
+.addVisitorContainer {
+  padding: 20px;
+  background: linear-gradient(to right, #1abc9c, #323946);
+  color: #ecf0f1;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 30px;
+  background: #2c3e50;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+  text-align: center;
+  color: #0ef;
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background: #2c3e50;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.table th {
+  background: #34495e;
+}
+
+.checkout-btn {
+  background: #e74c3c;
+  padding: 8px 15px;
+  border-radius: 4px;
+  width: auto;
+}

@@ -1,0 +1,97 @@
+/* MarkBillAsPaidUpdated.css */
+
+body {
+    background: linear-gradient(to right, #1abc9c, #34495e);
+    color: #ecf0f1;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.bill-container-updated {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #2c3e50;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bill-title-updated {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #3498db;
+    font-size: 1.8rem;
+}
+
+.bill-label-updated {
+    color: #ecf0f1;
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: block;
+}
+
+.bill-input-updated,
+.bill-select-updated,
+.bill-button-updated {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+}
+
+.bill-button-updated {
+    background-color: #1abc9c;
+    color: #ecf0f1;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.bill-button-updated:hover {
+    background-color: #3498db;
+}
+
+.bill-message-updated {
+    margin-top: 20px;
+    text-align: center;
+    color: #ecf0f1;
+    font-size: 1rem;
+}
+
+.bill-divider-updated {
+    margin: 20px 0;
+    border-top: 2px solid #bdc3c7;
+}
+
+.bill-details-updated {
+    margin-top: 20px;
+}
+
+.bill-log-updated {
+    background: #34495e;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.bill-log-updated p {
+    color: #ecf0f1;
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    .bill-container-updated {
+        padding: 20px;
+    }
+
+    .bill-input-updated,
+    .bill-select-updated,
+    .bill-button-updated {
+        padding: 10px;
+    }
+}
