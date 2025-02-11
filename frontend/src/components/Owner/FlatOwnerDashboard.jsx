@@ -11,7 +11,7 @@ const FlatOwnerDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             const flatOwnerDetails = JSON.parse(localStorage.getItem('flatOwnerDetails'));
-            const flatNumber = flatOwnerDetails.flatNumber;
+            const flatNumber = flatOwnerDetails.flat_Number;
 
             try {
                 const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/getFlatOwnerData?flat_number=${flatNumber}`);
