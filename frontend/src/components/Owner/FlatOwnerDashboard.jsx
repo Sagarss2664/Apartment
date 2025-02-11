@@ -14,7 +14,7 @@ const FlatOwnerDashboard = () => {
             const flatNumber = flatOwnerDetails.flatNumber;
 
             try {
-                const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/getFlatOwnerData?flat_number=${flatNumber}`);
+                const response = await fetch(`https://apartment-v69r.onrender.com/getFlatOwnerData?flat_number=${flatNumber}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -51,7 +51,7 @@ const FlatOwnerDashboard = () => {
     //         return;
     //     }
 
-    //     const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/addVehicle`, {
+    //     const response = await fetch(`https://apartment-v69r.onrender.com/addVehicle`, {
     //         method: 'POST',
     //         headers: { 'Content-Type': 'application/json' },
     //         body: JSON.stringify({ flat_number: ownerInfo.flat_number, ...newVehicle })
@@ -67,7 +67,7 @@ const FlatOwnerDashboard = () => {
     // };
 
     // const handleDeleteVehicle = async (registration_number) => {
-    //     const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/deleteVehicle`, {
+    //     const response = await fetch(`https://apartment-v69r.onrender.com/deleteVehicle`, {
     //         method: 'POST',
     //         headers: { 'Content-Type': 'application/json' },
     //         body: JSON.stringify({ flat_number: ownerInfo.flat_number, registration_number })
@@ -95,7 +95,7 @@ const FlatOwnerDashboard = () => {
         }
     
         try {
-            const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/addVehicle`, {
+            const response = await fetch(`https://apartment-v69r.onrender.com/addVehicle`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -129,7 +129,7 @@ const FlatOwnerDashboard = () => {
         }
     
         try {
-            const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/deleteVehicle`, {
+            const response = await fetch(`https://apartment-v69r.onrender.com/deleteVehicle`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ flat_number: flatNumber, registration_number })
@@ -153,7 +153,7 @@ const FlatOwnerDashboard = () => {
             const flatOwnerDetails = JSON.parse(localStorage.getItem('flatOwnerDetails'));
             const flatNumber = flatOwnerDetails?.flatNumber; // Ensure correct key
     
-            const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/updateAllDetails`, {
+            const response = await fetch(`https://apartment-v69r.onrender.com/updateAllDetails`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
