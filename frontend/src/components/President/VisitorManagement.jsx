@@ -27,7 +27,7 @@ const VisitorManagement = () => {
         }
       }
 
-      let url = 'https://apartmentmanagementsystem-q800.onrender.com/api/visitors';
+      let url = 'https://apartment-v69r.onrender.com/api/visitors';
       if (filterDate) {
         url = `${url}/date/${filterDate}`;
       }
@@ -48,7 +48,7 @@ const VisitorManagement = () => {
 
   const checkOut = async (id) => {
     try {
-      const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/api/visitors/checkout/${id}`, {
+      const response = await fetch(`https://apartment-v69r.onrender.com/api/visitors/checkout/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ exit_datetime: new Date().toISOString() }),
