@@ -20,7 +20,7 @@ const EmployeeLogs = () => {
 
   const loadEmployees = async () => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/employees');
+      const response = await fetch('https://apartment-v69r.onrender.com/api/employees');
       const data = await response.json();
       setEmployees(data);
     } catch (error) {
@@ -59,7 +59,7 @@ const EmployeeLogs = () => {
   const handleFilterChange = async () => {
     if (!validateDate()) return;
 
-    let url = 'https://apartmentmanagementsystem-q800.onrender.com/api/logs';
+    let url = 'https://apartment-v69r.onrender.com/api/logs';
 
     if (employeeId) {
       url += `/employee/${employeeId}`;
