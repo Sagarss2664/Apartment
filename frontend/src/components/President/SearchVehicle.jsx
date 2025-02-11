@@ -56,7 +56,7 @@ const SearchVehicle = () => {
     }
 
     try {
-      const response = await fetch(`https://apartmentmanagementsystem-backend.onrender.com/searchVehicle/${registrationNumber}`);
+      const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/searchVehicle/${registrationNumber}`);
       const result = await response.json();
 
       if (result.success) {
