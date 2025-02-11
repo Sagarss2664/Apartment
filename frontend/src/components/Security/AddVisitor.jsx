@@ -10,7 +10,7 @@ const AddVisitor = () => {
     purpose: ''
   });
 
-  const API_URL = 'https://apartmentmanagementsystem-q800.onrender.com/api/visitors';
+  const API_URL = 'https://apartment-v69r.onrender.com/api/visitors';
 
   const fetchVisitors = async () => {
     try {
