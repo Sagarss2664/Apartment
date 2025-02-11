@@ -11,10 +11,10 @@ const FlatOwnerDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             const flatOwnerDetails = JSON.parse(localStorage.getItem('flatOwnerDetails'));
-            const flatNumber = flatOwnerDetails.flat_Number;
+            const flatNumber = flatOwnerDetails.flatNumber;
 
             try {
-                const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/getFlatOwnerData?flat_number=${flatNumber}`);
+                const response = await fetch(`http://localhost:3000/getFlatOwnerData?flat_number=${flatNumber}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -45,7 +45,41 @@ const FlatOwnerDashboard = () => {
         setFamilyInfo({ ...familyInfo, [field]: value });
     };
 
-    
+    // const handleAddVehicle = async () => {
+    //     if (!newVehicle.type || !newVehicle.registration_number) {
+    //         alert('Please fill in all vehicle details.');
+    //         return;
+    //     }
+
+    //     const response = await fetch(`http://localhost:3000/addVehicle`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ flat_number: ownerInfo.flat_number, ...newVehicle })
+    //     });
+
+    //     const data = await response.json();
+    //     if (data.success) {
+    //         setVehicles([...vehicles, newVehicle]);
+    //         setNewVehicle({ type: '', registration_number: '' });
+    //     } else {
+    //         alert(data.message);
+    //     }
+    // };
+
+    // const handleDeleteVehicle = async (registration_number) => {
+    //     const response = await fetch(`http://localhost:3000/deleteVehicle`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ flat_number: ownerInfo.flat_number, registration_number })
+    //     });
+
+    //     const data = await response.json();
+    //     if (data.success) {
+    //         setVehicles(vehicles.filter(vehicle => vehicle.registration_number !== registration_number));
+    //     } else {
+    //         alert(data.message);
+    //     }
+    // };
     const handleAddVehicle = async () => {
         if (!newVehicle.type || !newVehicle.registration_number) {
             alert('Please fill in all vehicle details.');
@@ -61,7 +95,7 @@ const FlatOwnerDashboard = () => {
         }
     
         try {
-            const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/addVehicle`, {
+            const response = await fetch(`http://localhost:3000/addVehicle`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -95,7 +129,7 @@ const FlatOwnerDashboard = () => {
         }
     
         try {
-            const response = await fetch(`https://apartmentmanagementsystem-backend.onrender.com/deleteVehicle`, {
+            const response = await fetch(`http://localhost:3000/deleteVehicle`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ flat_number: flatNumber, registration_number })
@@ -119,7 +153,7 @@ const FlatOwnerDashboard = () => {
             const flatOwnerDetails = JSON.parse(localStorage.getItem('flatOwnerDetails'));
             const flatNumber = flatOwnerDetails?.flatNumber; // Ensure correct key
     
-            const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/updateAllDetails`, {
+            const response = await fetch(`http://localhost:3000/updateAllDetails`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -192,3 +226,4 @@ const FlatOwnerDashboard = () => {
 };
 
 export default FlatOwnerDashboard;
+
