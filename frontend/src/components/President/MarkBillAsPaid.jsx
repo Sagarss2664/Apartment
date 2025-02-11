@@ -23,7 +23,7 @@ const MarkBillAsPaid = () => {
       return;
     }
 
-    const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/markBillAsPaid', {
+    const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/markBillAsPaid', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ flat_number: flatNumber, utr_number: utrNumber }),
@@ -34,7 +34,7 @@ const MarkBillAsPaid = () => {
   };
 
   const viewBillLogs = async () => {
-    const response = await fetch(`https://apartmentmanagementsystem-backend.onrender.com/getBillLogs/${billStatus}`);
+    const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/getBillLogs/${billStatus}`);
     const result = await response.json();
 
     if (result.success) {
