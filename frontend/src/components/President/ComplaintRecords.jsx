@@ -10,7 +10,7 @@ const ComplaintRecordsUpdated = () => {
 
   const fetchComplaintRecords = async () => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/api/complaint-records');
+      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/complaint-records');
       const records = await response.json();
       setComplaints(records);
     } catch (error) {
@@ -20,7 +20,7 @@ const ComplaintRecordsUpdated = () => {
 
   const updateStatus = async (id) => {
     try {
-      const response = await fetch(`https://apartmentmanagementsystem-backend.onrender.com/api/complaint-records/${id}/status`, {
+      const response = await fetch(`hhttps://apartmentmanagementsystem-q800.onrender.com/api/complaint-records/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
       });
