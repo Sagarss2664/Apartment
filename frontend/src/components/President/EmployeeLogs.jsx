@@ -59,7 +59,7 @@ const EmployeeLogs = () => {
   const handleFilterChange = async () => {
     if (!validateDate()) return;
 
-    let url = 'https://apartmentmanagementsystem-q800.onrender.com/api/employees/api/logs';
+    let url = 'https://apartmentmanagementsystem-q800.onrender.com/api/logs';
 
     if (employeeId) {
       url += `/employee/${employeeId}`;
