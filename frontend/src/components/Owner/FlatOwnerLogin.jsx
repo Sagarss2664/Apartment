@@ -38,11 +38,8 @@ const FlatOwnerLogin = () => {
 
             if (data.success) {
                   navigate('/flat-owner-dashboard');
-                }));
-
-              
-
-            } else {
+                }
+             else {
                 alert(data.message || 'Invalid credentials');
             }
         } catch (error) {
