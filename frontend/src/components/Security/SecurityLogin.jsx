@@ -54,7 +54,7 @@ const SecurityLogin = () => {
 
     // If validation passes, proceed with login
     try {
-      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/s_login', {
+      const response = await fetch('https://apartment-v69r.onrender.com/s_login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
