@@ -44,7 +44,7 @@ const FlatOwnerLogin = () => {
                     phone: data.mobile,
                 }));
 
-                window.location.href = '/flat-owner-dashboard';
+                navigate('/flat-owner-dashboard');
 
             } else {
                 alert(data.message || 'Invalid credentials');
