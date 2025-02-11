@@ -37,14 +37,10 @@ const FlatOwnerLogin = () => {
             const data = await response.json();
 
             if (data.success) {
-                localStorage.setItem('flatOwnerDetails', JSON.stringify({
-                    name: data.name,
-                    flatNumber: flatNumber,
-                    email: data.email,
-                    phone: data.mobile,
+                  navigate('/flat-owner-dashboard');
                 }));
 
-                navigate('/flat-owner-dashboard');
+              
 
             } else {
                 alert(data.message || 'Invalid credentials');
