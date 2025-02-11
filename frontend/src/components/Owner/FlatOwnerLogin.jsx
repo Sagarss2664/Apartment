@@ -8,6 +8,7 @@ const FlatOwnerLogin = () => {
     const [flatNumber, setFlatNumber] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');
+const navigate = useNavigate();
 
     const handleLogin = async (event) => {
         event.preventDefault();
