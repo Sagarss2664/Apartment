@@ -67,11 +67,11 @@ hr {
 }
 
 .table th, .table td {
-    border: 1px solid #ddd;
+    border: 1px solid #000210;
     padding: 8px;
     text-align: left;
 }
 
 .table th {
-    background-color: #f2f2f2;
+    background-color: #f70000;
 }
