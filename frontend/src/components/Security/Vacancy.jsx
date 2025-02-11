@@ -7,7 +7,7 @@ const Vacancy = () => {
 
   const fetchVacancies = async () => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/api/vacancies');
+      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/vacancies');
       if (!response.ok) {
         throw new Error('Failed to fetch vacancies.');
       }
@@ -20,7 +20,7 @@ const Vacancy = () => {
 
   const deleteVacancy = async (id) => {
     try {
-      const response = await fetch(`https://apartmentmanagementsystem-backend.onrender.com/api/vacancies/${id}`, {
+      const response = await fetch(`https://apartmentmanagementsystem-q800.onrender.com/api/vacancies/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
