@@ -19,7 +19,7 @@ const EmployeeAttendance = () => {
 
   const loadEmployees = async () => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/api/employees');
+      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/employees');
       const employeesData = await response.json();
       setEmployees(employeesData);
     } catch (error) {
@@ -29,7 +29,7 @@ const EmployeeAttendance = () => {
 
   const checkIn = async (employeeId) => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/api/checkin', {
+      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ EmployeeID: employeeId })
@@ -49,7 +49,7 @@ const EmployeeAttendance = () => {
 
   const checkOut = async (employeeId) => {
     try {
-      const response = await fetch('https://apartmentmanagementsystem-backend.onrender.com/api/checkout', {
+      const response = await fetch('https://apartmentmanagementsystem-q800.onrender.com/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ EmployeeID: employeeId })
