@@ -44,7 +44,7 @@ const FlatOwnerLogin = () => {
                     phone: data.mobile,
                 }));
 
-                window.location.href = 'https://apartment-aaud.onrender.com/flat-owner-dashboard';
+                window.location.href = '/flat-owner-dashboard';
 
             } else {
                 alert(data.message || 'Invalid credentials');
