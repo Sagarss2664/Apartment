@@ -173,6 +173,31 @@ const complaintRecordSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }
 });
 
+app.post('/s_login', async (req, res) => {
+    const { mobile_number, password } = req.body;
+
+    if (!mobile_number || !password) {
+        return res.status(400).json({ success: false, message: 'Mobile number and password are required' });
+    }
+
+    try {
+        // Validate the login credentials from s_login collection
+        const user = await SLogin.findOne({ mobile_number, password });
+
+        if (user) {
+            res.status(200).json({
+                success: true,
+                message: 'Login successful',
+                name: `Student with Mobile Number: ${mobile_number}`, // or any other name field if needed
+            });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 
 // Schema and Model
