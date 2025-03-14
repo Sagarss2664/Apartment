@@ -128,7 +128,88 @@ app.get('/getFlatDetails/:flat_number', async (req, res) => {
 });
 
 
+//
 
+  app.post('/pchangepassword', async (req, res) => {
+    const { mobile_number, currentPassword, newPassword } = req.body;
+  
+    try {
+      const user = await Login.findOne({ mobile_number });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+      if (user.password !== currentPassword) {
+        return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+      }
+  
+      user.password = newPassword;
+      await user.save();
+  
+      res.status(200).json({ success: true, message: 'Password changed successfully' });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  });
+
+
+
+// Endpoint to change password
+app.post('/changePassword', async (req, res) => {
+    const { flat_number, currentPassword, newPassword } = req.body;
+
+    try {
+        // Find the user by flat number
+        const user = await FLogin.findOne({ flat_number });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Check if the current password matches
+        if (user.password !== currentPassword) {
+            return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+        }
+
+        // Update the password
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'Password changed successfully' });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+
+
+
+app.post('/change-security-password', async (req, res) => {
+    const { mobile_number, currentPassword, newPassword } = req.body;
+  
+    try {
+      const user = await SLogin.findOne({ mobile_number });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+      if (user.password !== currentPassword) {
+        return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+      }
+  
+      user.password = newPassword;
+      await user.save();
+  
+      res.status(200).json({ success: true, message: 'Password changed successfully' });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  });
 
 
 
