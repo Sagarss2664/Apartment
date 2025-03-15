@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-
+import cron from 'node-cron';
 dotenv.config();  // Load environment variables
 
 const app = express();
@@ -345,13 +345,23 @@ app.post('/f_forgot_password', async (req, res) => {
 
 
 // Bill Logs Schema
+// const billLogsSchema = new mongoose.Schema({
+//     flat_number: String,
+//     status: { type: String, default: 'Unpaid' },
+//     date: String,
+//     time: String,
+//     utr_number: { type: String, default: null }, // New field added
+// });
+
 const billLogsSchema = new mongoose.Schema({
     flat_number: String,
     status: { type: String, default: 'Unpaid' },
     date: String,
     time: String,
-    utr_number: { type: String, default: null }, // New field added
+    utr_number: { type: String, default: null },
+    amountToBePaid: { type: Number, required: true } // New field for tracking bill amounts
 });
+
 
 billLogsSchema.statics.resetMonthlyBills = async function () {
     await this.updateMany({}, { status: 'Unpaid', date: null, time: null, utr_number: null });
@@ -764,10 +774,19 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 });
 
 
+// 
+const BillLogs = mongoose.model('BillLogs', billLogsSchema);
+cron.schedule('*/2 * * * *', async () => {
+    const nextMonthMaintenanceFee = 1000; // Example maintenance fee (change as needed)
+    await BillLogs.updateMonthlyBills(nextMonthMaintenanceFee);
+    console.log("📢 Monthly bills updated successfully.");
+});
+
+// ✅ Endpoint: Mark Bill as Paid
 app.post('/markBillAsPaid', async (req, res) => {
     const { flat_number, utr_number } = req.body;
 
-    // Validation for flat number
+    // Validate flat number format (A1 - J10)
     if (!/^[A-J](10|[1-9])$/.test(flat_number)) {
         return res.status(400).json({
             success: false,
@@ -775,7 +794,7 @@ app.post('/markBillAsPaid', async (req, res) => {
         });
     }
 
-    // Validation for UTR number
+    // Validate UTR number format (12-digit numeric)
     if (!/^\d{12}$/.test(utr_number)) {
         return res.status(400).json({
             success: false,
@@ -809,6 +828,13 @@ app.post('/markBillAsPaid', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error!' });
     }
 });
+
+
+
+
+
+
+
 
 
 
