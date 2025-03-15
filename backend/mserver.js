@@ -775,24 +775,103 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 
 
 // 
-const BillLogs = mongoose.model('bills_logs', billLogsSchema);
+// const BillLogs = mongoose.model('bills_logs', billLogsSchema);
+// cron.schedule('*/2 * * * *', async () => {
+//     const nextMonthMaintenanceFee = 1000; // Example maintenance fee (change as needed)
+//     await BillLogs.updateMonthlyBills(nextMonthMaintenanceFee);
+//     console.log("📢 Monthly bills updated successfully.");
+// });
+
+// // ✅ Endpoint: Mark Bill as Paid
+// app.post('/markBillAsPaid', async (req, res) => {
+//     const { flat_number, utr_number } = req.body;
+
+//     Validate flat number format (A1 - J10)
+//     if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+//         return res.status(400).json({
+//             success: false,
+//             message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 1-10.`,
+//         });
+//     }
+
+//     // Validate UTR number format (12-digit numeric)
+//     if (!/^\d{12}$/.test(utr_number)) {
+//         return res.status(400).json({
+//             success: false,
+//             message: 'UTR number must be a 12-digit numeric value.',
+//         });
+//     }
+
+//     try {
+//         const existingBill = await BillLogs.findOne({ flat_number, status: 'Paid' });
+//         if (existingBill) {
+//             return res.json({ success: false, message: 'Bill is already marked as paid for this flat number.' });
+//         }
+
+//         const updatedBill = await BillLogs.findOneAndUpdate(
+//             { flat_number, status: 'Unpaid' },
+//             {
+//                 status: 'Paid',
+//                 date: new Date().toISOString().split('T')[0],
+//                 time: new Date().toLocaleTimeString(),
+//                 utr_number,
+//             },
+//             { new: true }
+//         );
+
+//         if (!updatedBill) {
+//             return res.json({ success: false, message: 'No unpaid bill found for the given flat number!' });
+//         }
+
+//         res.json({ success: true, message: 'Bill marked as paid successfully!', updatedBill });
+//     } catch (err) {
+//         res.status(500).json({ success: false, message: 'Internal server error!' });
+//     }
+// });
+// 🕒 Schedule Task: Run every 2 minutes
 cron.schedule('*/2 * * * *', async () => {
-    const nextMonthMaintenanceFee = 1000; // Example maintenance fee (change as needed)
-    await BillLogs.updateMonthlyBills(nextMonthMaintenanceFee);
-    console.log("📢 Monthly bills updated successfully.");
+    const additionalAmount = 1000;
+
+    try {
+        // Update all bills
+        await BillLogs.updateMany({}, [
+            {
+                $set: {
+                    status: "Unpaid",
+                    amountToBePaid: {
+                        $cond: {
+                            if: { $eq: ["$status", "Paid"] },
+                            then: { $add: ["$amountToBePaid", additionalAmount] }, // If Paid, add 1000
+                            else: {
+                                $cond: {
+                                    if: { $eq: ["$amountToBePaid", additionalAmount] },
+                                    then: { $add: ["$amountToBePaid", additionalAmount] }, // If 1000, add another 1000
+                                    else: "$amountToBePaid", // Otherwise, keep unchanged
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        ]);
+
+        console.log("✅ All statuses updated to 'Unpaid' & amounts updated.");
+    } catch (error) {
+        console.error("❌ Error updating bills:", error);
+    }
 });
 
 // ✅ Endpoint: Mark Bill as Paid
 app.post('/markBillAsPaid', async (req, res) => {
     const { flat_number, utr_number } = req.body;
 
-    // Validate flat number format (A1 - J10)
-    // if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
-    //     return res.status(400).json({
-    //         success: false,
-    //         message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 1-10.`,
-    //     });
-    // }
+    // Validate flat number format (A001 - J999)
+    if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+        return res.status(400).json({
+            success: false,
+            message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 3 digits.`,
+        });
+    }
 
     // Validate UTR number format (12-digit numeric)
     if (!/^\d{12}$/.test(utr_number)) {
@@ -815,6 +894,7 @@ app.post('/markBillAsPaid', async (req, res) => {
                 date: new Date().toISOString().split('T')[0],
                 time: new Date().toLocaleTimeString(),
                 utr_number,
+                $inc: { amountToBePaid: 1000 }, // Add 1000 if marked as paid
             },
             { new: true }
         );
@@ -828,7 +908,6 @@ app.post('/markBillAsPaid', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error!' });
     }
 });
-
 
 
 
