@@ -775,7 +775,7 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 
 
 // 
-const BillLogs = mongoose.model('BillLogs', billLogsSchema);
+const BillLogs = mongoose.model('bills_logs', billLogsSchema);
 cron.schedule('*/2 * * * *', async () => {
     const nextMonthMaintenanceFee = 1000; // Example maintenance fee (change as needed)
     await BillLogs.updateMonthlyBills(nextMonthMaintenanceFee);
