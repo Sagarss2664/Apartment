@@ -787,7 +787,7 @@ app.post('/markBillAsPaid', async (req, res) => {
     const { flat_number, utr_number } = req.body;
 
     // Validate flat number format (A1 - J10)
-    if (!/^[A-J]([0-9){3}$/.test(flat_number)) {
+    if (!/^[A-J][0-9){3}$/.test(flat_number)) {
         return res.status(400).json({
             success: false,
             message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 1-10.`,
