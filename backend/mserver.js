@@ -225,7 +225,7 @@ app.post('/change-security-password', async (req, res) => {
       }
   
       // Hash new password
-      const hashedPassword = await bcrypt.hash(new_password, 10);
+      //const hashedPassword = await bcrypt.hash(new_password, 10);
   
       // Update password
       user.password = new_password;
@@ -257,7 +257,7 @@ app.post('/change-security-password', async (req, res) => {
       }
   
       // Hash new password
-      const hashedPassword = await bcrypt.hash(new_password, 10);
+      //const hashedPassword = await bcrypt.hash(new_password, 10);
   
       // Update password
       user.password = new_password;
@@ -324,7 +324,7 @@ app.post('/f_forgot_password', async (req, res) => {
         }
 
         // **FIX: Hash the new password before saving**
-        const hashedPassword = await bcrypt.hash(new_password, 10);
+        //const hashedPassword = await bcrypt.hash(new_password, 10);
         loginUser.password = new_password;
         await loginUser.save();
 
