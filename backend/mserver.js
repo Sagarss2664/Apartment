@@ -58,12 +58,7 @@ const Flat = mongoose.model('Flat', flatSchema, 'flats'); // Explicitly set coll
 const Vehicle = mongoose.model('Vehicle', vehicleSchema, 'vehicledetails');
 const Family = mongoose.model('Family', familySchema, 'familydetails');
 
-// // Connect to MongoDB
-// mongoose.connect('mongodb+srv://01fe22bcs259:Sagar@cluster0.v0jo1.mongodb.net/', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-// }).then(() => console.log('Connected to MongoDB'))
-//   .catch(err => console.error('MongoDB connection error:', err));
+
 
 // MongoDB Connection
 const mongoURI = process.env.MONGO_URI;  // Make sure to add MONGO_URI in your .env file
@@ -210,6 +205,142 @@ app.post('/change-security-password', async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal server error' });
     }
   });
+//New passwrds changes
+
+  app.post('/president_reset_password', async (req, res) => {
+    try {
+      const { mobile_number, aadhaar_last4, new_password } = req.body;
+  
+      // Check if all fields are provided
+      if (!mobile_number || !aadhaar_last4 || !new_password) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+      }
+  
+      // Find president by mobile number
+      const user = await Login.findOne({ mobile_number });
+  
+      // Check if user exists and Aadhaar last 4 digits match
+      if (!user || user.aadhaar_number.slice(-4) !== aadhaar_last4) {
+        return res.status(400).json({ success: false, message: 'Invalid details' });
+      }
+  
+      // Hash new password
+      const hashedPassword = await bcrypt.hash(new_password, 10);
+  
+      // Update password
+      user.password = new_password;
+      await user.save();
+  
+      res.json({ success: true, message: 'Password reset successful' });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  });
+
+
+  app.post('/security_reset_password', async (req, res) => {
+    try {
+      const { mobile_number, aadhaar_last4, new_password } = req.body;
+  
+      // Check if all fields are provided
+      if (!mobile_number || !aadhaar_last4 || !new_password) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+      }
+  
+      // Find president by mobile number
+      const user = await SLogin.findOne({ mobile_number });
+  
+      // Check if user exists and Aadhaar last 4 digits match
+      if (!user || user.aadhaar_number.slice(-4) !== aadhaar_last4) {
+        return res.status(400).json({ success: false, message: 'Invalid details' });
+      }
+  
+      // Hash new password
+      const hashedPassword = await bcrypt.hash(new_password, 10);
+  
+      // Update password
+      user.password = new_password;
+      await user.save();
+  
+      res.json({ success: true, message: 'Password reset successful' });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  });
+
+
+app.post('/f_forgot_password', async (req, res) => {
+    try {
+        const { flat_number, mobile_number, aadhaar_last4, new_password } = req.body;
+
+        // Validate input
+        if (!flat_number || !mobile_number || !aadhaar_last4 || !new_password) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+
+        if (!/^\d{10}$/.test(mobile_number)) {
+            return res.status(400).json({ success: false, message: 'Invalid mobile number' });
+        }
+
+        if (!/^\d{4}$/.test(aadhaar_last4)) {
+            return res.status(400).json({ success: false, message: 'Aadhaar last 4 digits must be exactly 4 numbers' });
+        }
+
+        if (new_password.length < 8 || !/[a-zA-Z]/.test(new_password) || !/[0-9]/.test(new_password)) {
+            return res.status(400).json({ success: false, message: 'Password must be at least 8 characters long and alphanumeric' });
+        }
+
+        // Find flat details
+        const flat = await Flat.findOne({ flat_number });
+        if (!flat) {
+            return res.status(404).json({ success: false, message: 'Flat not found' });
+        }
+
+        let user = null;
+        let expectedAadhaarLast4 = '';
+
+        if (flat.is_owner_residing) {
+            // Fetch owner details
+            user = await Owner.findOne({ owner_id: flat.owner_id, mobile: mobile_number });
+            if (user) expectedAadhaarLast4 = user.aadhaar_number.slice(-4);
+        } else {
+            // Check tenant details
+            if (flat.tenant_mobile === mobile_number) {
+                expectedAadhaarLast4 = flat.tenant_aadhaar_number.slice(-4);
+                user = { flat_number }; // Dummy object to allow password reset
+            }
+        }
+
+        if (!user || expectedAadhaarLast4 !== aadhaar_last4) {
+            return res.status(400).json({ success: false, message: 'Invalid credentials' });
+        }
+
+        // Find user login data
+        const loginUser = await FLogin.findOne({ flat_number });
+        if (!loginUser) {
+            return res.status(404).json({ success: false, message: 'User login data not found' });
+        }
+
+        // **FIX: Hash the new password before saving**
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        loginUser.password = new_password;
+        await loginUser.save();
+
+        res.json({ success: true, message: 'Password reset successful' });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+
+
+
+
+
 
 
 
@@ -286,6 +417,7 @@ app.post('/s_login', async (req, res) => {
 const loginSchema = new mongoose.Schema({
     mobile_number: String,
     password: String,
+    aadhaar_number: String,
   });
   
   const Login = mongoose.model('Login', loginSchema, 'Login');
@@ -300,6 +432,7 @@ const loginSchema = new mongoose.Schema({
 const sLoginSchema = new mongoose.Schema({
     mobile_number: String,
     password: String,
+    aadhaar_number: String,
 });
 
 const SLogin = mongoose.model('SLogin', sLoginSchema,'s_login');
