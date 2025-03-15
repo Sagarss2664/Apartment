@@ -456,7 +456,7 @@ const Vacancy = mongoose.model('Vacancy', vacancySchema);
 // Model for Visitor Log
 // Notice 'visitorlogs' collection
 
-const BillLogs = mongoose.model('bills_logs', billLogsSchema);
+// const BillLogs = mongoose.model('bills_logs', billLogsSchema);
 
 
 //////////////////////////////////////////////////////////////////////////////
