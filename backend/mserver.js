@@ -1016,15 +1016,54 @@ app.post("/markBillAsPaid", async (req, res) => {
     //   },
     //   { new: true }
     // );
-      const now = new Date();
+//       const now = new Date();
+// const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+
+// // Get time in HH:MM:SS (24-hour format)
+// const formattedTime = now.toLocaleTimeString("en-IN", { 
+//   hour: "2-digit", 
+//   minute: "2-digit", 
+//   second: "2-digit", 
+//   hour12: false 
+// });
+
+// // Update Bill
+// const updatedBill = await BillLogs.findOneAndUpdate(
+//   { flat_number },
+//   {
+//     status: newStatus,
+//     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+//     utr_number,
+//     date: formattedDate,
+//     time: formattedTime
+//   },
+//   { new: true }
+// );
+
+//     res.json({
+//       success: true,
+//       message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+//       updatedBill
+//     });
+
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: "Internal Server Error!" });
+//   }
+// });
+
+
+
+
+
+const now = new Date();
 const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
 
-// Get time in HH:MM:SS (24-hour format)
+// Get time in HH:MM:SS AM/PM format
 const formattedTime = now.toLocaleTimeString("en-IN", { 
   hour: "2-digit", 
   minute: "2-digit", 
   second: "2-digit", 
-  hour12: false 
+  hour12: true 
 });
 
 // Update Bill
@@ -1040,15 +1079,10 @@ const updatedBill = await BillLogs.findOneAndUpdate(
   { new: true }
 );
 
-    res.json({
-      success: true,
-      message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
-      updatedBill
-    });
-
-  } catch (err) {
-    res.status(500).json({ success: false, message: "Internal Server Error!" });
-  }
+res.json({
+  success: true,
+  message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+  updatedBill
 });
 
 
@@ -1057,6 +1091,13 @@ const updatedBill = await BillLogs.findOneAndUpdate(
 
 
 
+
+
+
+
+
+
+      
 
 
 // Endpoint to fetch bill logs by status
