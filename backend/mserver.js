@@ -1471,7 +1471,6 @@ app.listen(PORT, () => {
 });
 ///////////////////////////////////////////////////////////////////////////////////////////
 // //Email Message sending
-import nodemailer from 'nodemailer';
 
 import { MongoClient } from 'mongodb';
 
