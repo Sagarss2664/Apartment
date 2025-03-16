@@ -1241,7 +1241,8 @@ cron.schedule("0 0 1 * *", async () => {
 
 
 
-const moment = require("moment-timezone"); // Ensure you install this package
+// const moment = require("moment-timezone"); // Ensure you install this package
+import moment from "moment-timezone";
 
 app.post("/markBillAsPaid", async (req, res) => {
   const { flat_number, utr_number, paid_amount } = req.body;
