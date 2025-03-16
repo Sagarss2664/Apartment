@@ -987,7 +987,9 @@ app.post("/markBillAsPaid", async (req, res) => {
         amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
         utr_number,
         date: new Date().toISOString().split("T")[0],
-        time: new Date().toLocaleTimeString()
+        // time: new Date().toLocaleTimeString()
+          time: new Date().toLocaleTimeString("en-IN", { hour12: false })
+
       },
       { new: true }
     );
