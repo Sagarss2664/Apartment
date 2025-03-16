@@ -1570,5 +1570,5 @@ const sendReminderEmails = async () => {
 
 // Step 3: Send emails every 10 seconds for testing purposes
 setInterval(sendReminderEmails, 10000* 10000); // 10 seconds interval
-
+  }
 
