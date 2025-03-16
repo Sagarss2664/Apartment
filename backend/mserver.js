@@ -1472,7 +1472,8 @@ app.listen(PORT, () => {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // //Email Message sending
 
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb');
+
 
 // MongoDB connection setup
 const mongoUri = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB URI
