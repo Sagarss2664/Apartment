@@ -828,85 +828,179 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 //         res.status(500).json({ success: false, message: 'Internal server error!' });
 //     }
 // });
+
+
+
+
 // 🕒 Schedule Task: Run every 2 minutes
-cron.schedule('*/2 * * * *', async () => {
-    const additionalAmount = 1000;
+// cron.schedule('*/2 * * * *', async () => {
+//     const additionalAmount = 1000;
 
-    try {
-        // Update all bills
-        await BillLogs.updateMany({}, [
-            {
-                $set: {
-                    status: "Unpaid",
-                    amountToBePaid: {
-                        $cond: {
-                            if: { $eq: ["$status", "Paid"] },
-                            then: { $add: ["$amountToBePaid", additionalAmount] }, // If Paid, add 1000
-                            else: {
-                                $cond: {
-                                    if: { $eq: ["$amountToBePaid", additionalAmount] },
-                                    then: { $add: ["$amountToBePaid", additionalAmount] }, // If 1000, add another 1000
-                                    else: "$amountToBePaid", // Otherwise, keep unchanged
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        ]);
+//     try {
+//         // Update all bills
+//         await BillLogs.updateMany({}, [
+//             {
+//                 $set: {
+//                     status: "Unpaid",
+//                     amountToBePaid: {
+//                         $cond: {
+//                             if: { $eq: ["$status", "Paid"] },
+//                             then: { $add: ["$amountToBePaid", additionalAmount] }, // If Paid, add 1000
+//                             else: {
+//                                 $cond: {
+//                                     if: { $eq: ["$amountToBePaid", additionalAmount] },
+//                                     then: { $add: ["$amountToBePaid", additionalAmount] }, // If 1000, add another 1000
+//                                     else: "$amountToBePaid", // Otherwise, keep unchanged
+//                                 },
+//                             },
+//                         },
+//                     },
+//                 },
+//             },
+//         ]);
 
-        console.log("✅ All statuses updated to 'Unpaid' & amounts updated.");
-    } catch (error) {
-        console.error("❌ Error updating bills:", error);
-    }
+//         console.log("✅ All statuses updated to 'Unpaid' & amounts updated.");
+//     } catch (error) {
+//         console.error("❌ Error updating bills:", error);
+//     }
+// });
+
+// // ✅ Endpoint: Mark Bill as Paid
+// app.post('/markBillAsPaid', async (req, res) => {
+//     const { flat_number, utr_number } = req.body;
+
+//     // Validate flat number format (A001 - J999)
+//     if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+//         return res.status(400).json({
+//             success: false,
+//             message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 3 digits.`,
+//         });
+//     }
+
+//     // Validate UTR number format (12-digit numeric)
+//     if (!/^\d{12}$/.test(utr_number)) {
+//         return res.status(400).json({
+//             success: false,
+//             message: 'UTR number must be a 12-digit numeric value.',
+//         });
+//     }
+
+//     try {
+//         const existingBill = await BillLogs.findOne({ flat_number, status: 'Paid' });
+//         if (existingBill) {
+//             return res.json({ success: false, message: 'Bill is already marked as paid for this flat number.' });
+//         }
+
+//         const updatedBill = await BillLogs.findOneAndUpdate(
+//             { flat_number, status: 'Unpaid' },
+//             {
+//                 status: 'Paid',
+//                 date: new Date().toISOString().split('T')[0],
+//                 time: new Date().toLocaleTimeString(),
+//                 utr_number,
+//                 $inc: { amountToBePaid: 1000 }, // Add 1000 if marked as paid
+//             },
+//             { new: true }
+//         );
+
+//         if (!updatedBill) {
+//             return res.json({ success: false, message: 'No unpaid bill found for the given flat number!' });
+//         }
+
+//         res.json({ success: true, message: 'Bill marked as paid successfully!', updatedBill });
+//     } catch (err) {
+//         res.status(500).json({ success: false, message: 'Internal server error!' });
+//     }
+// });
+
+
+
+
+// 🔹 CRON Job: Every 2 Minutes Update All Bills
+cron.schedule("*/2 * * * *", async () => {
+  const additionalAmount = 1000;
+
+  try {
+    await BillLogs.updateMany({}, [
+      {
+        $set: {
+          status: "Unpaid",
+          amountToBePaid: { $add: ["$amountToBePaid", additionalAmount] } // Add ₹1000
+        }
+      }
+    ]);
+
+    console.log("✅ All statuses updated to 'Unpaid' & ₹1000 added.");
+  } catch (error) {
+    console.error("❌ Error updating bills:", error);
+  }
 });
 
-// ✅ Endpoint: Mark Bill as Paid
-app.post('/markBillAsPaid', async (req, res) => {
-    const { flat_number, utr_number } = req.body;
+// 🔹 API: Mark Bill as Paid
+app.post("/markBillAsPaid", async (req, res) => {
+  const { flat_number, utr_number, paid_amount } = req.body;
 
-    // Validate flat number format (A001 - J999)
-    if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
-        return res.status(400).json({
-            success: false,
-            message: `Flat number "${flat_number}" is invalid. Valid flat numbers start with A-J and are followed by 3 digits.`,
-        });
+  // Validate Flat Number
+  if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+    return res.status(400).json({
+      success: false,
+      message: `Invalid Flat Number: ${flat_number}. Format: A001 - J999`
+    });
+  }
+
+  // Validate UTR Number
+  if (!/^\d{12}$/.test(utr_number)) {
+    return res.status(400).json({
+      success: false,
+      message: "UTR Number must be a 12-digit numeric value."
+    });
+  }
+
+  // Validate Paid Amount
+  const amountPaid = parseFloat(paid_amount);
+  if (isNaN(amountPaid) || amountPaid <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Paid Amount. Enter a valid number greater than 0."
+    });
+  }
+
+  try {
+    // Find unpaid bill
+    const bill = await BillLogs.findOne({ flat_number });
+
+    if (!bill) {
+      return res.json({
+        success: false,
+        message: "No unpaid bill found for this flat number."
+      });
     }
 
-    // Validate UTR number format (12-digit numeric)
-    if (!/^\d{12}$/.test(utr_number)) {
-        return res.status(400).json({
-            success: false,
-            message: 'UTR number must be a 12-digit numeric value.',
-        });
-    }
+    let newAmountToBePaid = bill.amountToBePaid - amountPaid;
+    let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
 
-    try {
-        const existingBill = await BillLogs.findOne({ flat_number, status: 'Paid' });
-        if (existingBill) {
-            return res.json({ success: false, message: 'Bill is already marked as paid for this flat number.' });
-        }
+    // Update Bill
+    const updatedBill = await BillLogs.findOneAndUpdate(
+      { flat_number },
+      {
+        status: newStatus,
+        amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+        utr_number,
+        date: new Date().toISOString().split("T")[0],
+        time: new Date().toLocaleTimeString()
+      },
+      { new: true }
+    );
 
-        const updatedBill = await BillLogs.findOneAndUpdate(
-            { flat_number, status: 'Unpaid' },
-            {
-                status: 'Paid',
-                date: new Date().toISOString().split('T')[0],
-                time: new Date().toLocaleTimeString(),
-                utr_number,
-                $inc: { amountToBePaid: 1000 }, // Add 1000 if marked as paid
-            },
-            { new: true }
-        );
+    res.json({
+      success: true,
+      message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+      updatedBill
+    });
 
-        if (!updatedBill) {
-            return res.json({ success: false, message: 'No unpaid bill found for the given flat number!' });
-        }
-
-        res.json({ success: true, message: 'Bill marked as paid successfully!', updatedBill });
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Internal server error!' });
-    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Internal Server Error!" });
+  }
 });
 
 
