@@ -916,8 +916,27 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 
 
 
-// 🔹 CRON Job: Every 2 Minutes Update All Bills
-cron.schedule("*/2 * * * *", async () => {
+// // 🔹 CRON Job: Every 2 Minutes Update All Bills
+// cron.schedule("*/2 * * * *", async () => {
+//   const additionalAmount = 1000;
+
+//   try {
+//     await BillLogs.updateMany({}, [
+//       {
+//         $set: {
+//           status: "Unpaid",
+//           amountToBePaid: { $add: ["$amountToBePaid", additionalAmount] } // Add ₹1000
+//         }
+//       }
+//     ]);
+
+//     console.log("✅ All statuses updated to 'Unpaid' & ₹1000 added.");
+//   } catch (error) {
+//     console.error("❌ Error updating bills:", error);
+//   }
+// });
+
+cron.schedule("0 0 1 * *", async () => {
   const additionalAmount = 1000;
 
   try {
@@ -930,11 +949,15 @@ cron.schedule("*/2 * * * *", async () => {
       }
     ]);
 
-    console.log("✅ All statuses updated to 'Unpaid' & ₹1000 added.");
+    console.log("✅ All statuses updated to 'Unpaid' & ₹1000 added on the 1st of the month.");
   } catch (error) {
     console.error("❌ Error updating bills:", error);
   }
 });
+
+
+
+
 
 // 🔹 API: Mark Bill as Paid
 app.post("/markBillAsPaid", async (req, res) => {
