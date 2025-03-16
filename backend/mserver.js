@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
 dotenv.config();  // Load environment variables
-const nodemailer = require('nodemailer');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
