@@ -1003,19 +1003,42 @@ app.post("/markBillAsPaid", async (req, res) => {
     let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
 
     // Update Bill
-    const updatedBill = await BillLogs.findOneAndUpdate(
-      { flat_number },
-      {
-        status: newStatus,
-        amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
-        utr_number,
-        date: new Date().toISOString().split("T")[0],
-        // time: new Date().toLocaleTimeString()
-          time: new Date().toLocaleTimeString("en-IN", { hour12: false })
+    // const updatedBill = await BillLogs.findOneAndUpdate(
+    //   { flat_number },
+    //   {
+    //     status: newStatus,
+    //     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+    //     utr_number,
+    //     date: new Date().toISOString().split("T")[0],
+    //     // time: new Date().toLocaleTimeString()
+    //       time: new Date().toLocaleTimeString("en-IN", { hour12: false })
 
-      },
-      { new: true }
-    );
+    //   },
+    //   { new: true }
+    // );
+      const now = new Date();
+const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+
+// Get time in HH:MM:SS (24-hour format)
+const formattedTime = now.toLocaleTimeString("en-IN", { 
+  hour: "2-digit", 
+  minute: "2-digit", 
+  second: "2-digit", 
+  hour12: false 
+});
+
+// Update Bill
+const updatedBill = await BillLogs.findOneAndUpdate(
+  { flat_number },
+  {
+    status: newStatus,
+    amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+    utr_number,
+    date: formattedDate,
+    time: formattedTime
+  },
+  { new: true }
+);
 
     res.json({
       success: true,
