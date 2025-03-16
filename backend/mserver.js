@@ -1472,101 +1472,101 @@ app.listen(PORT, () => {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // //Email Message sending
 
-const { MongoClient } = require('mongodb');
+// const { MongoClient } = require('mongodb');
 
 
-// MongoDB connection setup
-const mongoUri = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB URI
-const dbName = 'Akshaya_Garden_Apartment_Database'; // Replace with your database name
-let client;
+// // MongoDB connection setup
+// const mongoUri = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB URI
+// const dbName = 'Akshaya_Garden_Apartment_Database'; // Replace with your database name
+// let client;
 
-// Step 1: Configure the transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: '01fe22bcs259@kletech.ac.in', // Your email
-        pass: 'swzk lukh byrh xema', // Your email app password
-    },
-});
+// // Step 1: Configure the transporter
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: '01fe22bcs259@kletech.ac.in', // Your email
+//         pass: 'swzk lukh byrh xema', // Your email app password
+//     },
+// });
 
-// Step 2: Email sending function
-const sendReminderEmails = async () => {
-    try {
-        // Initialize MongoDB client if not already connected
-        if (!client) {
-            client = new MongoClient(mongoUri, { useUnifiedTopology: true });
-            await client.connect();
-            console.log('Connected to MongoDB');
-        }
+// // Step 2: Email sending function
+// const sendReminderEmails = async () => {
+//     try {
+//         // Initialize MongoDB client if not already connected
+//         if (!client) {
+//             client = new MongoClient(mongoUri, { useUnifiedTopology: true });
+//             await client.connect();
+//             console.log('Connected to MongoDB');
+//         }
 
-        const db = client.db(dbName);
+//         const db = client.db(dbName);
 
-        // Collections
-        const flatsCollection = db.collection('flats');
-        const ownersCollection = db.collection('owner');
-        const billLogsCollection = db.collection('bills_logs');
+//         // Collections
+//         const flatsCollection = db.collection('flats');
+//         const ownersCollection = db.collection('owner');
+//         const billLogsCollection = db.collection('bills_logs');
 
-        console.log('Fetching unpaid bills...');
-        // Fetch flats with unpaid bills
-        const unpaidBills = await billLogsCollection.find({ status: 'Unpaid' }).toArray();
+//         console.log('Fetching unpaid bills...');
+//         // Fetch flats with unpaid bills
+//         const unpaidBills = await billLogsCollection.find({ status: 'Unpaid' }).toArray();
 
-        if (unpaidBills.length === 0) {
-            console.log('No unpaid bills found.');
-            return;
-        }
+//         if (unpaidBills.length === 0) {
+//             console.log('No unpaid bills found.');
+//             return;
+//         }
 
-        console.log(`Found ${unpaidBills.length} unpaid bills.`);
+//         console.log(`Found ${unpaidBills.length} unpaid bills.`);
 
-        for (const bill of unpaidBills) {
-            console.log(`Processing bill for flat: ${bill.flat_number}`);
-            const flat = await flatsCollection.findOne({ flat_number: bill.flat_number });
+//         for (const bill of unpaidBills) {
+//             console.log(`Processing bill for flat: ${bill.flat_number}`);
+//             const flat = await flatsCollection.findOne({ flat_number: bill.flat_number });
 
-            if (!flat) {
-                console.error(`Flat not found for flat_number: ${bill.flat_number}`);
-                continue;
-            }
+//             if (!flat) {
+//                 console.error(`Flat not found for flat_number: ${bill.flat_number}`);
+//                 continue;
+//             }
 
-            // Determine email recipients
-            const emails = [];
+//             // Determine email recipients
+//             const emails = [];
 
-            // Add tenant email if tenant is residing
-            if (!flat.is_owner_residing && flat.tenant_email) {
-                emails.push(flat.tenant_email);
-                console.log(`Added tenant email: ${flat.tenant_email}`);
-            }
+//             // Add tenant email if tenant is residing
+//             if (!flat.is_owner_residing && flat.tenant_email) {
+//                 emails.push(flat.tenant_email);
+//                 console.log(`Added tenant email: ${flat.tenant_email}`);
+//             }
 
-            // Add owner email
-            const owner = await ownersCollection.findOne({ owner_id: flat.owner_id });
-            if (owner && owner.email) {
-                emails.push(owner.email);
-                console.log(`Added owner email: ${owner.email}`);
-            }
+//             // Add owner email
+//             const owner = await ownersCollection.findOne({ owner_id: flat.owner_id });
+//             if (owner && owner.email) {
+//                 emails.push(owner.email);
+//                 console.log(`Added owner email: ${owner.email}`);
+//             }
 
-            if (emails.length === 0) {
-                console.log(`No email recipients for flat ${bill.flat_number}`);
-                continue;
-            }
+//             if (emails.length === 0) {
+//                 console.log(`No email recipients for flat ${bill.flat_number}`);
+//                 continue;
+//             }
 
-            // Send email
-            const mailOptions = {
-                from: '01fe22bcs259@kletech.ac.in',
-                to: emails.join(', '),
-                subject: `Maintenance Fee Reminder for Flat ${bill.flat_number}`,
-                text: `Dear Resident/Owner,\n\nThis is a friendly reminder to pay the outstanding maintenance fees for Flat ${bill.flat_number}.\n\nDue Date: ${bill.date}\n\nThank you for your prompt attention to this matter.\n\nBest Regards,\nApartment Management Team`,
-            };
+//             // Send email
+//             const mailOptions = {
+//                 from: '01fe22bcs259@kletech.ac.in',
+//                 to: emails.join(', '),
+//                 subject: `Maintenance Fee Reminder for Flat ${bill.flat_number}`,
+//                 text: `Dear Resident/Owner,\n\nThis is a friendly reminder to pay the outstanding maintenance fees for Flat ${bill.flat_number}.\n\nDue Date: ${bill.date}\n\nThank you for your prompt attention to this matter.\n\nBest Regards,\nApartment Management Team`,
+//             };
 
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error(`Error sending email for Flat ${bill.flat_number}:`, err);
-                } else {
-                    console.log(`Email sent successfully for Flat ${bill.flat_number}:`, info.response);
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error during email reminder process:', error);
-    }
-};
+//             transporter.sendMail(mailOptions, (err, info) => {
+//                 if (err) {
+//                     console.error(`Error sending email for Flat ${bill.flat_number}:`, err);
+//                 } else {
+//                     console.log(`Email sent successfully for Flat ${bill.flat_number}:`, info.response);
+//                 }
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error during email reminder process:', error);
+//     }
+// };
 
 // Step 3: Send emails every 10 seconds for testing purposes
 setInterval(sendReminderEmails, 10000* 10000); // 10 seconds interval
