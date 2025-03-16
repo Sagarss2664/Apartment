@@ -961,6 +961,205 @@ cron.schedule("0 0 1 * *", async () => {
 
 
 // 🔹 API: Mark Bill as Paid
+// app.post("/markBillAsPaid", async (req, res) => {
+//   const { flat_number, utr_number, paid_amount } = req.body;
+
+//   // Validate Flat Number
+//   if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+//     return res.status(400).json({
+//       success: false,
+//       message: `Invalid Flat Number: ${flat_number}. Format: A001 - J999`
+//     });
+//   }
+
+//   // Validate UTR Number
+//   if (!/^\d{12}$/.test(utr_number)) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "UTR Number must be a 12-digit numeric value."
+//     });
+//   }
+
+//   // Validate Paid Amount
+//   const amountPaid = parseFloat(paid_amount);
+//   if (isNaN(amountPaid) || amountPaid <= 0) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid Paid Amount. Enter a valid number greater than 0."
+//     });
+//   }
+
+//   try {
+//     // Find unpaid bill
+//     const bill = await BillLogs.findOne({ flat_number });
+
+//     if (!bill) {
+//       return res.json({
+//         success: false,
+//         message: "No unpaid bill found for this flat number."
+//       });
+//     }
+
+//     let newAmountToBePaid = bill.amountToBePaid - amountPaid;
+//     let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
+
+//     // Update Bill
+//     // const updatedBill = await BillLogs.findOneAndUpdate(
+//     //   { flat_number },
+//     //   {
+//     //     status: newStatus,
+//     //     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+//     //     utr_number,
+//     //     date: new Date().toISOString().split("T")[0],
+//     //     // time: new Date().toLocaleTimeString()
+//     //       time: new Date().toLocaleTimeString("en-IN", { hour12: false })
+
+//     //   },
+//     //   { new: true }
+//     // );
+// //       const now = new Date();
+// // const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+
+// // // Get time in HH:MM:SS (24-hour format)
+// // const formattedTime = now.toLocaleTimeString("en-IN", { 
+// //   hour: "2-digit", 
+// //   minute: "2-digit", 
+// //   second: "2-digit", 
+// //   hour12: false 
+// // });
+
+// // // Update Bill
+// // const updatedBill = await BillLogs.findOneAndUpdate(
+// //   { flat_number },
+// //   {
+// //     status: newStatus,
+// //     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+// //     utr_number,
+// //     date: formattedDate,
+// //     time: formattedTime
+// //   },
+// //   { new: true }
+// // );
+
+// //     res.json({
+// //       success: true,
+// //       message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+// //       updatedBill
+// //     });
+
+// //   } catch (err) {
+// //     res.status(500).json({ success: false, message: "Internal Server Error!" });
+// //   }
+// // });
+
+
+
+
+
+// const now = new Date();
+// const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+
+// // Get time in HH:MM:SS AM/PM format
+// const formattedTime = now.toLocaleTimeString("en-IN", { 
+//   hour: "2-digit", 
+//   minute: "2-digit", 
+//   second: "2-digit", 
+//   hour12: true 
+// });
+
+// // Update Bill
+// const updatedBill = await BillLogs.findOneAndUpdate(
+//   { flat_number },
+//   {
+//     status: newStatus,
+//     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+//     utr_number,
+//     date: formattedDate,
+//     time: formattedTime
+//   },
+//   { new: true }
+// );
+
+// res.json({
+//   success: true,
+//   message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+//   updatedBill
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+
+// // Endpoint to fetch bill logs by status
+// app.get('/getBillLogs/:status', async (req, res) => {
+//     const { status } = req.params;
+
+//     if (!['Paid', 'Unpaid'].includes(status)) {
+//         return res.status(400).json({
+//             success: false,
+//             message: 'Invalid status! Use "Paid" or "Unpaid".',
+//         });
+//     }
+
+//     try {
+//         const bills = await BillLogs.find({ status });
+
+//         if (!bills.length) {
+//             return res.json({ success: false, message: `No bills found with status "${status}".` });
+//         }
+
+//         res.json({
+//             success: true,
+//             bills: bills.map(bill => ({
+//                 bill_id: bill._id,
+//                 flat_number: bill.flat_number,
+//                 status: bill.status,
+//                 date: bill.date || 'N/A',
+//                 time: bill.time || 'N/A',
+//                 utr_number: bill.utr_number || 'N/A',
+//                 amountToBePaid : bill.amountToBePaid|| '0',
+//             })),
+//         });
+//     } catch (err) {
+//         res.status(500).json({ success: false, message: 'Error fetching bill logs' });
+//     }
+// });
+
+
+
+// // Endpoint to fetch all visitor logs
+// app.get('/getVisitorLogs', async (req, res) => {
+//     try {
+//         // Fetch all visitor logs from the 'visitorlogs' collection
+//         const visitorLogs = await visitorLog.find();
+
+//         if (visitorLogs.length === 0) {
+//             return res.json({ success: false, message: 'No visitor logs found.' });
+//         }
+
+//         res.json({
+//             success: true,
+//             visitor_logs: visitorLogs,
+//         });
+//     } catch (err) {
+//         console.error('Error fetching visitor logs:', err); // Log the error
+//         res.status(500).json({ success: false, message: 'Internal server error.' });
+//     }
+// });
+
+
+
 app.post("/markBillAsPaid", async (req, res) => {
   const { flat_number, utr_number, paid_amount } = req.body;
 
@@ -1003,103 +1202,38 @@ app.post("/markBillAsPaid", async (req, res) => {
     let newAmountToBePaid = bill.amountToBePaid - amountPaid;
     let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
 
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+    const formattedTime = now.toLocaleTimeString("en-IN", { 
+      hour: "2-digit", 
+      minute: "2-digit", 
+      second: "2-digit", 
+      hour12: true 
+    });
+
     // Update Bill
-    // const updatedBill = await BillLogs.findOneAndUpdate(
-    //   { flat_number },
-    //   {
-    //     status: newStatus,
-    //     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
-    //     utr_number,
-    //     date: new Date().toISOString().split("T")[0],
-    //     // time: new Date().toLocaleTimeString()
-    //       time: new Date().toLocaleTimeString("en-IN", { hour12: false })
+    const updatedBill = await BillLogs.findOneAndUpdate(
+      { flat_number },
+      {
+        status: newStatus,
+        amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+        utr_number,
+        date: formattedDate,
+        time: formattedTime
+      },
+      { new: true }
+    );
 
-    //   },
-    //   { new: true }
-    // );
-//       const now = new Date();
-// const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+    res.json({
+      success: true,
+      message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+      updatedBill
+    });
 
-// // Get time in HH:MM:SS (24-hour format)
-// const formattedTime = now.toLocaleTimeString("en-IN", { 
-//   hour: "2-digit", 
-//   minute: "2-digit", 
-//   second: "2-digit", 
-//   hour12: false 
-// });
-
-// // Update Bill
-// const updatedBill = await BillLogs.findOneAndUpdate(
-//   { flat_number },
-//   {
-//     status: newStatus,
-//     amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
-//     utr_number,
-//     date: formattedDate,
-//     time: formattedTime
-//   },
-//   { new: true }
-// );
-
-//     res.json({
-//       success: true,
-//       message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
-//       updatedBill
-//     });
-
-//   } catch (err) {
-//     res.status(500).json({ success: false, message: "Internal Server Error!" });
-//   }
-// });
-
-
-
-
-
-const now = new Date();
-const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
-
-// Get time in HH:MM:SS AM/PM format
-const formattedTime = now.toLocaleTimeString("en-IN", { 
-  hour: "2-digit", 
-  minute: "2-digit", 
-  second: "2-digit", 
-  hour12: true 
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Internal Server Error!" });
+  }
 });
-
-// Update Bill
-const updatedBill = await BillLogs.findOneAndUpdate(
-  { flat_number },
-  {
-    status: newStatus,
-    amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
-    utr_number,
-    date: formattedDate,
-    time: formattedTime
-  },
-  { new: true }
-);
-
-res.json({
-  success: true,
-  message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
-  updatedBill
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
 
 // Endpoint to fetch bill logs by status
 app.get('/getBillLogs/:status', async (req, res) => {
@@ -1128,7 +1262,7 @@ app.get('/getBillLogs/:status', async (req, res) => {
                 date: bill.date || 'N/A',
                 time: bill.time || 'N/A',
                 utr_number: bill.utr_number || 'N/A',
-                amountToBePaid : bill.amountToBePaid|| '0',
+                amountToBePaid: bill.amountToBePaid || '0',
             })),
         });
     } catch (err) {
@@ -1136,13 +1270,11 @@ app.get('/getBillLogs/:status', async (req, res) => {
     }
 });
 
-
-
 // Endpoint to fetch all visitor logs
 app.get('/getVisitorLogs', async (req, res) => {
     try {
         // Fetch all visitor logs from the 'visitorlogs' collection
-        const visitorLogs = await visitorLog.find();
+        const visitorLogs = await VisitorLogs.find(); // Ensure the correct collection name is used
 
         if (visitorLogs.length === 0) {
             return res.json({ success: false, message: 'No visitor logs found.' });
@@ -1157,6 +1289,49 @@ app.get('/getVisitorLogs', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
