@@ -1038,7 +1038,7 @@ app.get('/getBillLogs/:status', async (req, res) => {
                 date: bill.date || 'N/A',
                 time: bill.time || 'N/A',
                 utr_number: bill.utr_number || 'N/A',
-                amountToBePaid : bill.amountToBePaid|| 'N/A,
+                amountToBePaid : bill.amountToBePaid|| 'N/A',
             })),
         });
     } catch (err) {
