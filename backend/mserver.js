@@ -740,6 +740,40 @@ app.post('/deleteVehicle', async (req, res) => {
 /////////////////////////////
 
 // Endpoint to search for a vehicle by registration number
+// app.get('/searchVehicle/:registration_number', async (req, res) => {
+//     const registrationNumber = req.params.registration_number;
+
+//     try {
+//         // Check if the vehicle exists in your apartment
+//         const vehicle = await Vehicle.findOne({ registration_number: registrationNumber });
+//         if (vehicle) {
+//             const flatDetails = await Flat.findOne({ flat_number: vehicle.flat_number });
+//             const familyDetails = await Family.findOne({ flat_number: vehicle.flat_number });
+
+//             return res.json({
+//                 success: true,
+//                 is_from_apartment: true,
+//                 vehicle: {
+//                     flat_number: vehicle.flat_number,
+//                     vehicle_type: vehicle.vehicle_type,
+//                     registration_number: vehicle.registration_number,
+//                 },
+//                 flat_details: flatDetails || { message: 'Flat details not found.' },
+//                 family_details: familyDetails || { message: 'Family details not found.' },
+//             });
+//         }
+
+//         // Vehicle not found in your apartment
+//         res.json({
+//             success: true,
+//             is_from_apartment: false,
+//             message: 'Vehicle does not belong to your apartment.',
+//         });
+//     } catch (err) {
+//         res.status(500).json({ success: false, message: 'Internal server error!' });
+//     }
+// });
+
 app.get('/searchVehicle/:registration_number', async (req, res) => {
     const registrationNumber = req.params.registration_number;
 
@@ -747,9 +781,44 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
         // Check if the vehicle exists in your apartment
         const vehicle = await Vehicle.findOne({ registration_number: registrationNumber });
         if (vehicle) {
+            // Fetch flat details
             const flatDetails = await Flat.findOne({ flat_number: vehicle.flat_number });
-            const familyDetails = await Family.findOne({ flat_number: vehicle.flat_number });
+            if (!flatDetails) {
+                return res.json({
+                    success: true,
+                    is_from_apartment: true,
+                    vehicle: {
+                        flat_number: vehicle.flat_number,
+                        vehicle_type: vehicle.vehicle_type,
+                        registration_number: vehicle.registration_number,
+                    },
+                    flat_details: { message: 'Flat details not found.' },
+                    owner_details: { message: 'Owner details not found.' },
+                    tenant_details: { message: 'Tenant details not found.' },
+                });
+            }
 
+            // Fetch owner details
+            const ownerDetails = await Owner.findOne({ owner_id: flatDetails.owner_id });
+            if (!ownerDetails) {
+                return res.json({
+                    success: true,
+                    is_from_apartment: true,
+                    vehicle: {
+                        flat_number: vehicle.flat_number,
+                        vehicle_type: vehicle.vehicle_type,
+                        registration_number: vehicle.registration_number,
+                    },
+                    flat_details: flatDetails,
+                    owner_details: { message: 'Owner details not found.' },
+                    tenant_details: {
+                        tenant_name: flatDetails.tenant_name || 'N/A',
+                        tenant_mobile: flatDetails.tenant_mobile || 'N/A',
+                    },
+                });
+            }
+
+            // Return all details
             return res.json({
                 success: true,
                 is_from_apartment: true,
@@ -758,8 +827,15 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
                     vehicle_type: vehicle.vehicle_type,
                     registration_number: vehicle.registration_number,
                 },
-                flat_details: flatDetails || { message: 'Flat details not found.' },
-                family_details: familyDetails || { message: 'Family details not found.' },
+                flat_details: flatDetails,
+                owner_details: {
+                    owner_name: ownerDetails.name || 'N/A',
+                    owner_mobile: ownerDetails.mobile || 'N/A',
+                },
+                tenant_details: {
+                    tenant_name: flatDetails.tenant_name || 'N/A',
+                    tenant_mobile: flatDetails.tenant_mobile || 'N/A',
+                },
             });
         }
 
@@ -770,9 +846,24 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
             message: 'Vehicle does not belong to your apartment.',
         });
     } catch (err) {
+        console.error('Error:', err);
         res.status(500).json({ success: false, message: 'Internal server error!' });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // 
