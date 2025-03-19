@@ -1251,6 +1251,80 @@ cron.schedule("0 0 1 * *", async () => {
 
 
 
+// app.post("/markBillAsPaid", async (req, res) => {
+//   const { flat_number, utr_number, paid_amount } = req.body;
+
+//   // Validate Flat Number
+//   if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
+//     return res.status(400).json({
+//       success: false,
+//       message: `Invalid Flat Number: ${flat_number}. Format: A001 - J999`
+//     });
+//   }
+
+//   // Validate UTR Number
+//   if (!/^\d{12}$/.test(utr_number)) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "UTR Number must be a 12-digit numeric value."
+//     });
+//   }
+
+//   // Validate Paid Amount
+//   const amountPaid = parseFloat(paid_amount);
+//   if (isNaN(amountPaid) || amountPaid <= 0) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid Paid Amount. Enter a valid number greater than 0."
+//     });
+//   }
+
+//   try {
+//     // Find unpaid bill
+//     const bill = await BillLogs.findOne({ flat_number });
+
+//     if (!bill) {
+//       return res.json({
+//         success: false,
+//         message: "No unpaid bill found for this flat number."
+//       });
+//     }
+
+//     let newAmountToBePaid = bill.amountToBePaid - amountPaid;
+//     let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
+
+//     const now = new Date();
+//     const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+//     const formattedTime = now.toLocaleTimeString("en-IN", { 
+//       hour: "2-digit", 
+//       minute: "2-digit", 
+//       second: "2-digit", 
+//       hour12: true 
+//     });
+
+//     // Update Bill
+//     const updatedBill = await BillLogs.findOneAndUpdate(
+//       { flat_number },
+//       {
+//         status: newStatus,
+//         amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
+//         utr_number,
+//         date: formattedDate,
+//         time: formattedTime
+//       },
+//       { new: true }
+//     );
+
+//     res.json({
+//       success: true,
+//       message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
+//       updatedBill
+//     });
+
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: "Internal Server Error!" });
+//   }
+// });   Now updated
 app.post("/markBillAsPaid", async (req, res) => {
   const { flat_number, utr_number, paid_amount } = req.body;
 
@@ -1258,7 +1332,7 @@ app.post("/markBillAsPaid", async (req, res) => {
   if (!/^[A-J][0-9]{3}$/.test(flat_number)) {
     return res.status(400).json({
       success: false,
-      message: `Invalid Flat Number: ${flat_number}. Format: A001 - J999`
+      message: `Invalid Flat Number: ${flat_number}. Format: A001 - J999`,
     });
   }
 
@@ -1266,7 +1340,7 @@ app.post("/markBillAsPaid", async (req, res) => {
   if (!/^\d{12}$/.test(utr_number)) {
     return res.status(400).json({
       success: false,
-      message: "UTR Number must be a 12-digit numeric value."
+      message: "UTR Number must be a 12-digit numeric value.",
     });
   }
 
@@ -1275,7 +1349,7 @@ app.post("/markBillAsPaid", async (req, res) => {
   if (isNaN(amountPaid) || amountPaid <= 0) {
     return res.status(400).json({
       success: false,
-      message: "Invalid Paid Amount. Enter a valid number greater than 0."
+      message: "Invalid Paid Amount. Enter a valid number greater than 0.",
     });
   }
 
@@ -1286,20 +1360,31 @@ app.post("/markBillAsPaid", async (req, res) => {
     if (!bill) {
       return res.json({
         success: false,
-        message: "No unpaid bill found for this flat number."
+        message: "No unpaid bill found for this flat number.",
       });
     }
 
     let newAmountToBePaid = bill.amountToBePaid - amountPaid;
     let newStatus = newAmountToBePaid <= 0 ? "Paid" : "Unpaid";
 
+    // Get current date and time in IST
     const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
-    const formattedTime = now.toLocaleTimeString("en-IN", { 
-      hour: "2-digit", 
-      minute: "2-digit", 
-      second: "2-digit", 
-      hour12: true 
+    const ISTOffset = 330; // IST is UTC+5:30 (5 hours and 30 minutes in minutes)
+    const ISTTime = new Date(now.getTime() + ISTOffset * 60 * 1000);
+
+    // Format date as DD/MM/YYYY
+    const formattedDate = `${ISTTime.getUTCDate().toString().padStart(2, "0")}/${(
+      ISTTime.getUTCMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}/${ISTTime.getUTCFullYear()}`;
+
+    // Format time as HH:MM:SS AM/PM
+    const formattedTime = ISTTime.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
     });
 
     // Update Bill
@@ -1310,7 +1395,7 @@ app.post("/markBillAsPaid", async (req, res) => {
         amountToBePaid: newAmountToBePaid > 0 ? newAmountToBePaid : 0,
         utr_number,
         date: formattedDate,
-        time: formattedTime
+        time: formattedTime,
       },
       { new: true }
     );
@@ -1318,10 +1403,10 @@ app.post("/markBillAsPaid", async (req, res) => {
     res.json({
       success: true,
       message: `Bill updated successfully! Remaining amount: ₹${updatedBill.amountToBePaid}`,
-      updatedBill
+      updatedBill,
     });
-
   } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ success: false, message: "Internal Server Error!" });
   }
 });
