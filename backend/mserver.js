@@ -1791,11 +1791,78 @@ app.get('/api/employees', async (req, res) => {
     }
 });
 
+// app.post('/api/checkin', async (req, res) => {
+//     try {
+//         const { EmployeeID } = req.body;
+//         const today = new Date().toISOString().split('T')[0];
+
+//         const existingLog = await Log.findOne({
+//             EmployeeID,
+//             Date: today
+//         });
+
+//         if (existingLog && existingLog.CheckInTime) {
+//             return res.status(400).json({ message: 'Already checked in today' });
+//         }
+
+//         if (existingLog) {
+//             existingLog.CheckInTime = new Date();
+//             await existingLog.save();
+//         } else {
+//             await Log.create({
+//                 EmployeeID,
+//                 Date: today,
+//                 CheckInTime: new Date()
+//             });
+//         }
+
+//         res.json({ message: 'Check-in successful' });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+// app.post('/api/checkout', async (req, res) => {
+//     try {
+//         const { EmployeeID } = req.body;
+//         const today = new Date().toISOString().split('T')[0];
+
+//         const log = await Log.findOne({
+//             EmployeeID,
+//             Date: today
+//         });
+
+//         if (!log || !log.CheckInTime) {
+//             return res.status(400).json({ message: 'Must check in before checking out' });
+//         }
+
+//         if (log.CheckOutTime) {
+//             return res.status(400).json({ message: 'Already checked out today' });
+//         }
+
+//         log.CheckOutTime = new Date();
+//         await log.save();
+
+//         res.json({ message: 'Check-out successful' });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+
 app.post('/api/checkin', async (req, res) => {
     try {
         const { EmployeeID } = req.body;
-        const today = new Date().toISOString().split('T')[0];
 
+        // Get current date and time in IST
+        const now = new Date();
+        const ISTOffset = 330; // IST is UTC+5:30 (5 hours and 30 minutes in minutes)
+        const ISTTime = new Date(now.getTime() + ISTOffset * 60 * 1000);
+
+        // Format date as YYYY-MM-DD
+        const today = ISTTime.toISOString().split('T')[0];
+
+        // Check if the employee has already checked in today
         const existingLog = await Log.findOne({
             EmployeeID,
             Date: today
@@ -1806,13 +1873,15 @@ app.post('/api/checkin', async (req, res) => {
         }
 
         if (existingLog) {
-            existingLog.CheckInTime = new Date();
+            // Update existing log with CheckInTime in IST
+            existingLog.CheckInTime = ISTTime;
             await existingLog.save();
         } else {
+            // Create a new log with CheckInTime in IST
             await Log.create({
                 EmployeeID,
                 Date: today,
-                CheckInTime: new Date()
+                CheckInTime: ISTTime
             });
         }
 
@@ -1825,8 +1894,16 @@ app.post('/api/checkin', async (req, res) => {
 app.post('/api/checkout', async (req, res) => {
     try {
         const { EmployeeID } = req.body;
-        const today = new Date().toISOString().split('T')[0];
 
+        // Get current date and time in IST
+        const now = new Date();
+        const ISTOffset = 330; // IST is UTC+5:30 (5 hours and 30 minutes in minutes)
+        const ISTTime = new Date(now.getTime() + ISTOffset * 60 * 1000);
+
+        // Format date as YYYY-MM-DD
+        const today = ISTTime.toISOString().split('T')[0];
+
+        // Find the log for today
         const log = await Log.findOne({
             EmployeeID,
             Date: today
@@ -1840,7 +1917,8 @@ app.post('/api/checkout', async (req, res) => {
             return res.status(400).json({ message: 'Already checked out today' });
         }
 
-        log.CheckOutTime = new Date();
+        // Update CheckOutTime in IST
+        log.CheckOutTime = ISTTime;
         await log.save();
 
         res.json({ message: 'Check-out successful' });
@@ -1848,6 +1926,27 @@ app.post('/api/checkout', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // PResident attendence view
 
