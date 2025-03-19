@@ -1901,7 +1901,7 @@ app.post('/api/checkout', async (req, res) => {
         const ISTTime = new Date(now.getTime() + ISTOffset * 60 * 1000);
 
         // Format date as YYYY-MM-DD
-        const today = ISTTime.toISOString().split('T')[0];
+        const today = ISTTime.toISOString().split('   Time')[0];
 
         // Find the log for today
         const log = await Log.findOne({
