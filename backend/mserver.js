@@ -1996,6 +1996,49 @@ app.get('/api/logs/employee/:employeeId', async (req, res) => {
     }
 });
 
+//New api
+// Get logs by employee and month (for calendar view)
+app.get('/api/logs/employee-month/:employeeId/:yearMonth', async (req, res) => {
+    try {
+        const { employeeId, yearMonth } = req.params;
+        
+        // Validate yearMonth format (YYYY-MM)
+        if (!/^\d{4}-\d{2}$/.test(yearMonth)) {
+            return res.status(400).json({ message: 'Invalid year-month format. Use YYYY-MM' });
+        }
+
+        // Create start and end dates for the month
+        const [year, month] = yearMonth.split('-').map(Number);
+        const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0];
+        const endDate = new Date(year, month, 0).toISOString().split('T')[0];
+
+        // Find logs for the employee within the month
+        const logs = await Log.find({
+            EmployeeID: employeeId,
+            Date: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).sort('Date');
+
+        // Get employee details
+        const employee = await Employee.findOne({ EmployeeID: employeeId });
+
+        // Combine logs with employee details
+        const logsWithDetails = logs.map(log => ({
+            ...log.toObject(),
+            employee
+        }));
+
+        res.json(logsWithDetails);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
