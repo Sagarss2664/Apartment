@@ -852,7 +852,53 @@ app.get('/searchVehicle/:registration_number', async (req, res) => {
 });
 
 
-
+app.get('/vehicleSummary', async (req, res) => {
+    try {
+        // Define all possible blocks (A to J)
+        const blocks = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        
+        // Get all vehicles from the database
+        const vehicles = await Vehicle.find({});
+        
+        // Initialize summary object
+        const summary = {};
+        
+        // Initialize each block with 0 counts
+        blocks.forEach(block => {
+            summary[block] = {
+                Car: 0,
+                Bike: 0
+            };
+        });
+        
+        // Count vehicles by block and type
+        vehicles.forEach(vehicle => {
+            const block = vehicle.flat_number.charAt(0).toUpperCase(); // Get first character as block
+            const vehicleType = vehicle.vehicle_type;
+            
+            if (blocks.includes(block) && (vehicleType === 'Car' || vehicleType === 'Bike')) {
+                summary[block][vehicleType]++;
+            }
+        });
+        
+        // Convert the summary object to an array format for better frontend display
+        const summaryArray = Object.keys(summary).map(block => ({
+            block,
+            Car: summary[block].Car,
+            Bike: summary[block].Bike,
+            total: summary[block].Car + summary[block].Bike
+        }));
+        
+        res.json({
+            success: true,
+            summary: summaryArray
+        });
+        
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({ success: false, message: 'Internal server error!' });
+    }
+});
 
 
 
