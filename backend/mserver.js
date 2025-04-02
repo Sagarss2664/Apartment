@@ -720,13 +720,13 @@ app.post('/updateAllDetails', async (req, res) => {
 app.post('/addVehicle', async (req, res) => {
     try {
         console.log("Received data:", req.body); // Debugging
-        const { type, registration_number, flat_number } = req.body; 
+        const { vehicle_type, registration_number, flat_number } = req.body; 
         
-        if (!type || !registration_number || !flat_number) {
+        if (!vehicle_type || !registration_number || !flat_number) {
             return res.status(400).json({ success: false, message: 'All fields are required.' });
         }
 
-        const newVehicle = new Vehicle({ vehicle_type: type, registration_number, flat_number });
+        const newVehicle = new Vehicle({ vehicle_type, registration_number, flat_number });
         await newVehicle.save();
         
         res.json({ success: true, message: 'Vehicle added successfully.' });
