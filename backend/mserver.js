@@ -697,15 +697,38 @@ app.post('/updateAllDetails', async (req, res) => {
 });
 // D:\React Apartment\apartmentApp\src\components
 // Add Vehicle
+// app.post('/addVehicle', async (req, res) => {
+//     try {
+//         const { type, registration_number, flat_number } = req.body; // Change vehicle_type to type
+//         if (!type || !registration_number || !flat_number) {
+//             return res.status(400).json({ success: false, message: 'All fields are required.' });
+//         }
+        
+//         const newVehicle = new Vehicle({ vehicle_type: type, registration_number, flat_number }); // Map type to vehicle_type
+//         await newVehicle.save();
+//         res.json({ success: true, message: 'Vehicle added successfully.' });
+//     } catch (error) {
+//         if (error.code === 11000) {
+//             return res.status(400).json({ success: false, message: 'Registration number already exists.' });
+//         }
+//         res.status(500).json({ success: false, message: 'Server error', error: error.message });
+//     }
+// });
+
+
+
 app.post('/addVehicle', async (req, res) => {
     try {
-        const { type, registration_number, flat_number } = req.body; // Change vehicle_type to type
+        console.log("Received data:", req.body); // Debugging
+        const { type, registration_number, flat_number } = req.body; 
+        
         if (!type || !registration_number || !flat_number) {
             return res.status(400).json({ success: false, message: 'All fields are required.' });
         }
-        
-        const newVehicle = new Vehicle({ vehicle_type: type, registration_number, flat_number }); // Map type to vehicle_type
+
+        const newVehicle = new Vehicle({ vehicle_type: type, registration_number, flat_number });
         await newVehicle.save();
+        
         res.json({ success: true, message: 'Vehicle added successfully.' });
     } catch (error) {
         if (error.code === 11000) {
