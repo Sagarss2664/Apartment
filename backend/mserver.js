@@ -2106,6 +2106,82 @@ app.get('/api/logs/employee-month/:employeeId/:yearMonth', async (req, res) => {
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Pop message
+const popupMessageSchema = new mongoose.Schema({
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: String, required: true }, // Can be ObjectId if you have user auth
+    isActive: { type: Boolean, default: true },
+});
+
+const PopupMessage = mongoose.model('PopupMessage', popupMessageSchema);
+
+app.post('/addPopupMessage', async (req, res) => {
+    try {
+        const { message, createdBy } = req.body;
+        
+        if (!message) {
+            return res.status(400).json({ success: false, message: 'Message is required.' });
+        }
+
+        // Deactivate all previous messages
+        await PopupMessage.updateMany({}, { $set: { isActive: false } });
+
+        const newMessage = new PopupMessage({
+            message,
+            createdBy: createdBy || 'admin' // Replace with actual user ID from auth
+        });
+        await newMessage.save();
+        
+        res.json({ success: true, message: 'Popup message added successfully.' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+app.get('/getPopupMessages', async (req, res) => {
+    try {
+        const messages = await PopupMessage.find().sort({ createdAt: -1 });
+        res.json({ success: true, messages });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+app.get('/getActivePopupMessage', async (req, res) => {
+    try {
+        const message = await PopupMessage.findOne({ isActive: true }).sort({ createdAt: -1 });
+        
+        if (!message) {
+            return res.json({ success: true, message: null });
+        }
+        
+        res.json({ success: true, message });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+app.patch('/updatePopupMessageStatus/:id', async (req, res) => {
+    try {
+        const { isActive } = req.body;
+        
+        const updatedMessage = await PopupMessage.findByIdAndUpdate(
+            req.params.id,
+            { isActive },
+            { new: true }
+        );
+        
+        if (!updatedMessage) {
+            return res.status(404).json({ success: false, message: 'Message not found' });
+        }
+        
+        res.json({ success: true, message: 'Message status updated', updatedMessage });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
 
 
 
