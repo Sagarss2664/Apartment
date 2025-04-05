@@ -2183,6 +2183,20 @@ app.patch('/updatePopupMessageStatus/:id', async (req, res) => {
     }
 });
 
+// Add this to your existing routes
+app.delete('/deletePopupMessage/:id', async (req, res) => {
+    try {
+        const deletedMessage = await PopupMessage.findByIdAndDelete(req.params.id);
+        
+        if (!deletedMessage) {
+            return res.status(404).json({ success: false, message: 'Message not found' });
+        }
+        
+        res.json({ success: true, message: 'Message deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
 
 
 app.listen(PORT, () => {
