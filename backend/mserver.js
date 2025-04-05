@@ -575,16 +575,45 @@ app.post('/f_login', async (req, res) => {
     }
 });
 
+// app.get('/getFlatNumbers', async (req, res) => {
+//     try {
+//         const flats = await Flat.find({}, { flat_number: 1 });
+//         const flatNumbers = flats.map(flat => flat.flat_number);
+//         res.json({ success: true, flat_numbers: flatNumbers });
+//     } catch (err) {
+//         console.error('Error fetching flat numbers:', err);
+//         res.status(500).json({ success: false, message: 'Internal server error!' });
+//     }
+// });
 app.get('/getFlatNumbers', async (req, res) => {
     try {
         const flats = await Flat.find({}, { flat_number: 1 });
         const flatNumbers = flats.map(flat => flat.flat_number);
+        
+        // Sort the flat numbers
+        flatNumbers.sort((a, b) => {
+            // Extract the letter part and number part for comparison
+            const aLetter = a.match(/^[A-Za-z]+/)[0];
+            const bLetter = b.match(/^[A-Za-z]+/)[0];
+            
+            // If letters are different, sort by letter
+            if (aLetter !== bLetter) {
+                return aLetter.localeCompare(bLetter);
+            }
+            
+            // If letters are same, sort by the numeric part
+            const aNum = parseInt(a.match(/\d+$/)[0]);
+            const bNum = parseInt(b.match(/\d+$/)[0]);
+            return aNum - bNum;
+        });
+        
         res.json({ success: true, flat_numbers: flatNumbers });
     } catch (err) {
         console.error('Error fetching flat numbers:', err);
         res.status(500).json({ success: false, message: 'Internal server error!' });
     }
 });
+
 
 /////////////////////////////////////
 
