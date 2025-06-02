@@ -1,6 +1,11 @@
-# server/Dockerfile
 FROM node:20-alpine
+
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
+
 RUN npm install
-CMD ["node", "server.js"]
+
+COPY . .
+
+CMD ["node", "mserver.js"]  # Replace with your actual main file name
