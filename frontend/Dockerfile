@@ -1,8 +1,13 @@
-# client/Dockerfile
-FROM node:20-alpine
+# Dockerfile (Nginx production build for React)
+# Build Stage
+FROM node:20-alpine as build
 WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
-RUN npm install -g serve
-CMD ["serve", "-s", "build", "-l", "3000"]
+
+# Production Stage
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
