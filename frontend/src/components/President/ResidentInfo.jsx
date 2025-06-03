@@ -14,7 +14,7 @@ const ResidentsInfo = () => {
     // Fetch flat numbers from the server
     const loadFlatNumbers = async () => {
         try {
-            const response = await fetch('https://apartment-v69r.onrender.com/getFlatNumbers');
+            const response = await fetch('http://34.121.192.129/getFlatNumbers');
             const result = await response.json();
 
             if (result.success && result.flat_numbers.length > 0) {
@@ -38,7 +38,7 @@ const ResidentsInfo = () => {
         }
 
         try {
-            const response = await fetch(`https://apartment-v69r.onrender.com/getFlatDetails/${selectedFlatNumber}`);
+            const response = await fetch(`http://34.121.192.129/getFlatDetails/${selectedFlatNumber}`);
             const result = await response.json();
 
             if (result.success) {
