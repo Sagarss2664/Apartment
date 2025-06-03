@@ -54,7 +54,7 @@ const PresidentLogin = () => {
     }
 
     try {
-      const response = await fetch('https://apartment-v69r.onrender.com/login', {
+      const response = await fetch('http://34.121.192.129/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
