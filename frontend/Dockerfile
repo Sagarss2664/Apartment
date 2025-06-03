@@ -1,13 +1,14 @@
-# Dockerfile (Nginx production build for React)
-# Build Stage
-FROM node:20-alpine as build
+# Stage 1: Build
+FROM node:18-alpine AS builder
 WORKDIR /app
-COPY . .
+COPY package.json package-lock.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
-# Production Stage
+# Stage 2: Serve with nginx
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
