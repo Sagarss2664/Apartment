@@ -1,19 +1,13 @@
-# Frontend Dockerfile
-FROM node:18-alpine AS builder
+# Use a Node.js image
+FROM node:20-alpine
 
 WORKDIR /app
+
 COPY . .
 
 RUN npm install
 RUN npm run build
+RUN npm install -g serve
 
-# Production NGINX image
-FROM nginx:stable-alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
-
+# Serve the React build directory
+CMD ["serve", "-s", "dist", "-l", "80"]
