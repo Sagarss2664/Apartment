@@ -1,11 +1,7 @@
-FROM node:20-alpine
-
+FROM node:18-alpine
 WORKDIR /app
-
-COPY package*.json ./
-
+COPY package.json package-lock.json ./
 RUN npm install
-
 COPY . .
-
-CMD ["node", "mserver.js"]  # Replace with your actual main file name
+EXPOSE 5000
+CMD ["node", "mserver.js"]
